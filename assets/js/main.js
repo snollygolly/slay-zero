@@ -1,14 +1,14 @@
-let sockets;
+let socket;
 let games = {};
 
 $(document).on("ready", (e) => {
-	sockets = new WebSocket("ws://50.16.122.48:62951/");
+	socket = new WebSocket("ws://50.16.122.48:62951/");
 
-	sockets.onopen = (e) => {
+	socket.onopen = (e) => {
 		console.log("Connected!");
 	};
 
-	sockets.onmessage = (e) => {
+	socket.onmessage = (e) => {
 		const messageParts = e.data.split("$");
 		const messageType = messageParts.shift();
 		if (messageType !== undefined) {
@@ -17,7 +17,7 @@ $(document).on("ready", (e) => {
 			if (!replyPayload) {
 				return;
 			}
-			sockets.send(replyPayload);
+			socket.send(replyPayload);
 		}
 	};
 
@@ -60,11 +60,8 @@ const messageRouter = {
 	"gLU": (payload) => {
 		// incremental updates to the map
 		console.log(`Got update to game ${payload[0]}`);
-		console.log(payload);
 		const id = payload[0];
 		const players = parseInt(payload[1]);
-		console.log(payload[1]);
-		console.log(players);
 		if (players >= 1) {
 			// this is a regular update?
 			games[id].players = players;
@@ -100,9 +97,14 @@ function addRow(game) {
 	const parsedMode = getMode(game.mode);
 	// see if the server is full or not
 	const parsedAvail = game.players === game.max ? "full" : "open";
+	let parsedClass = game.players === game.max ? "danger" : "success";
+	if (game.players === 0) {
+		parsedClass = "primary";
+	}
 	const row = document.createElement("tr");
 	$(row).attr("id", `game-${game.id}`);
 	$(row).attr("data-id", game.id);
+	$(row).attr("class", parsedClass);
 	$(row).append(`
 		<td>#${game.id}</td>
 		<td class="map">${game.map}</td>

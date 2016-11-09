@@ -6,3 +6,7 @@ body {
   /* Margin bottom by footer height */
   margin-bottom: 50px;
 }
+
+#games-list tr {
+  cursor: pointer;
+}
