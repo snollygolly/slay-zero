@@ -78,7 +78,7 @@ const messageRouter = {
 			// this is a new game
 			const game = {
 				id: id,
-				map: parseInt(payload[2]),
+				map: payload[2],
 				mode: parseInt(payload[3]),
 				players: 0,
 				max: parseInt(payload[4])
