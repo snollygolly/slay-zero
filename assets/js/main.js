@@ -1,5 +1,5 @@
 let socket;
-let games = {};
+const games = {};
 
 $(document).on("ready", (e) => {
 	socket = new WebSocket("ws://50.16.122.48:62951/");
