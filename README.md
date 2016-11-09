@@ -1,4 +1,4 @@
-# slay-zero
+# :european_castle: slay-zero
 A server browser for slay.one
 
 ## Installation
