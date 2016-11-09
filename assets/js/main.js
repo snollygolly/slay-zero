@@ -21,6 +21,12 @@ $(document).on("ready", (e) => {
 		}
 	};
 
+	$(document).on("click", ".server", (e) => {
+		const id = $(e.target).parent().attr("data-id");
+		const address = `http://slay.one?game=${id}`;
+		window.open(address, "_blank");
+	});
+
 });
 
 const messageRouter = {
@@ -104,7 +110,7 @@ function addRow(game) {
 	const row = document.createElement("tr");
 	$(row).attr("id", `game-${game.id}`);
 	$(row).attr("data-id", game.id);
-	$(row).attr("class", parsedClass);
+	$(row).addClass(`server server-${parsedAvail} ${parsedClass}`);
 	$(row).append(`
 		<td>#${game.id}</td>
 		<td class="map">${game.map}</td>
