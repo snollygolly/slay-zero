@@ -8,5 +8,5 @@ body {
 }
 
 #games-list tr {
-  cursor: pointer;
+  cursor: default;
 }

@@ -50,6 +50,37 @@
 			</div>
 		</div>
 
+		<!-- Modal -->
+		<div class="modal fade" id="peek-modal" tabindex="-1" role="dialog" aria-labelledby="peak-modal-label">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						<h4 class="modal-title" id="peek-modal-label">Server Information</h4>
+					</div>
+					<div id="peak-information" class="modal-body">
+						<table id="players-list" class="table">
+							<thead>
+								<tr>
+									<th>Name</th>
+									<th>HP</th>
+									<th>K:D Ratio</th>
+									<th>Souls</th>
+									<th>ELO</th>
+								</tr>
+							</thead>
+							<tbody id="players-list-body">
+
+							</tbody>
+						</table>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
 		<!-- Bootstrap core JavaScript
 		================================================== -->
 		<!-- Placed at the end of the document so the pages load faster -->
