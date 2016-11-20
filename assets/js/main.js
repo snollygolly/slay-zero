@@ -2,10 +2,11 @@ let socket;
 const games = {};
 
 $(document).on("ready", (e) => {
-	socket = new WebSocket("ws://50.16.122.48:62951/");
+	socket = new WebSocket("ws://50.16.122.48:62950/");
 
 	socket.onopen = (e) => {
 		console.log("Connected!");
+		socket.send("plSettings$AutomatedScanner");
 	};
 
 	socket.onmessage = (e) => {
@@ -20,7 +21,14 @@ $(document).on("ready", (e) => {
 			if (!replyPayload) {
 				return;
 			}
-			socket.send(replyPayload);
+			if (typeof replyPayload === "string") {
+				// simple reply
+				socket.send(replyPayload);
+				return;
+			}
+			for (const reply of replyPayload) {
+				socket.send(reply);
+			}
 		}
 	};
 
@@ -40,7 +48,7 @@ $(document).on("ready", (e) => {
 const messageRouter = {
 	"rdy2AutoLogin": (payload) => {
 		// everything is good, ready to get started
-		return "req-games-list";
+		return ["mu", "req-games-list"];
 	},
 	"tgklf": (payload) => {
 		// no idea what this does
