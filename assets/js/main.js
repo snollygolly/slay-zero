@@ -1,8 +1,10 @@
 let socket;
+const username = "slayzero";
+const password = "password";
 const games = {};
 
 $(document).on("ready", (e) => {
-	socket = new WebSocket("ws://50.16.122.48:62950/");
+	socket = new WebSocket("ws://50.16.122.48:62951/");
 
 	socket.onopen = (e) => {
 		console.log("Connected!");
@@ -47,6 +49,10 @@ $(document).on("ready", (e) => {
 
 const messageRouter = {
 	"rdy2AutoLogin": (payload) => {
+		// everything is good, ready to get started
+		return ["mu", "dontListen2GamesList", `login$${username}$${password}$true`];
+	},
+	"logged-in": (payload) => {
 		// everything is good, ready to get started
 		return ["mu", "req-games-list"];
 	},
