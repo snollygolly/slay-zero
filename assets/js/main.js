@@ -3,15 +3,41 @@ const username = "slayzero";
 const password = "password";
 const games = {};
 
+const servers = ["ws://50.16.122.48:62950/", "ws://50.16.122.48:62951/"];
+
 $(document).on("ready", (e) => {
-	socket = new WebSocket("ws://50.16.122.48:62951/");
+	connect(servers.shift());
+
+	$(document).on("click", "#join-game", (e) => {
+		const id = $(e.target).attr("data-id");
+		const address = `http://slay.one?game=${id}`;
+		window.open(address, "_blank");
+	});
+
+	$(document).on("click", "#peek-game", (e) => {
+		const id = $(e.target).attr("data-id");
+		socket.send(`join-game$${id}`);
+	});
+
+});
+
+function connect(server) {
+	console.log(`Attempting to connect to ${server}`);
+	socket = new WebSocket(server);
 
 	socket.onopen = (e) => {
-		console.log("Connected!");
+		console.log(`Connected to ${server}`);
 		socket.send("plSettings$AutomatedScanner");
 	};
 
 	socket.onmessage = (e) => {
+		if (e.data === "gL") {
+			console.log("Disconnecting, bad server");
+			// wrong server?
+			socket.close();
+			// get rid of the first server and connect again
+			return connect(servers.shift());
+		}
 		const messageParts = e.data.split("$");
 		const messageType = messageParts.shift();
 		if (messageType !== undefined) {
@@ -33,19 +59,7 @@ $(document).on("ready", (e) => {
 			}
 		}
 	};
-
-	$(document).on("click", "#join-game", (e) => {
-		const id = $(e.target).attr("data-id");
-		const address = `http://slay.one?game=${id}`;
-		window.open(address, "_blank");
-	});
-
-	$(document).on("click", "#peek-game", (e) => {
-		const id = $(e.target).attr("data-id");
-		socket.send(`join-game$${id}`);
-	});
-
-});
+}
 
 const messageRouter = {
 	"rdy2AutoLogin": (payload) => {
@@ -68,7 +82,7 @@ const messageRouter = {
 		console.log("Got initial games list");
 		$("#loading").hide();
 		// the initial load of the map
-		for (let i = 0; i < payload.length; i += 5) {
+		for (let i = 0; i < payload.length; i += 9) {
 			// load in the map, games are 5 long
 			// $Big One $16 $5 $3 $16
 			// map, current players, game id, mode, max players
@@ -77,7 +91,10 @@ const messageRouter = {
 				map: payload[i],
 				mode: parseInt(payload[i + 3]),
 				players: parseInt(payload[i + 1]),
-				max: parseInt(payload[i + 4])
+				max: parseInt(payload[i + 4]),
+				width: payload[i + 5],
+				height: payload[i + 6],
+				desc: payload[i + 7]
 			};
 			// add it to the array
 			games[game.id] = game;
